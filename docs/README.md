@@ -12,8 +12,7 @@
 
 | [![](https://avatars.githubusercontent.com/Luidooo)](https://github.com/Luidooo) | [![](https://avatars.githubusercontent.com/Stain19)](https://github.com/Stain19) | [![](https://avatars.githubusercontent.com/R-enanVieira)](https://github.com/R-enanVieira) | [![](https://avatars.githubusercontent.com/Sophiassilva)](https://github.com/Sophiassilva) | [![](https://avatars.githubusercontent.com/TiagoBalieiro)](https://github.com/TiagoBalieiro) |
 |:-------------------------------------------------------------:|:-------------------------------------------------------------:|:-------------------------------------------------------------:|:-------------------------------------------------------------:|:-------------------------------------------------------------:|
-| [Luis Eduardo Lima](https://github.com/Luidooo)<br>**221008285** | [Pedro Rocha](https://github.com/Stain19)<br>**211062384** | [Renan Vieira](https://github.com/R-enanVieira)<br>**221031363** | [Sophia Silva](https://github.com/Sophiassilva)<br>**231026886** | [Tiago Balieiro](https://github.com/TiagoBalieiro)<br>**231011838** |
-
+| [Luis Eduardo Lima](https://github.com/Luidooo)<br>**221008285** | [Pedro Braga](https://github.com/Stain19)<br>**211062384** | [Renan Vieira](https://github.com/R-enanVieira)<br>**221031363** | [Sophia Silva](https://github.com/Sophiassilva)<br>**231026886** | [Tiago Balieiro](https://github.com/TiagoBalieiro)<br>**231011838** |
 
 
 ## Sobre 
