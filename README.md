@@ -29,3 +29,10 @@ Para iniciar o site localmente, utilize o comando:
 ```shell
 docsify serve ./docs
 ```
+
+
+Se estiver em um ambiente com nix disponível :snowflake: :
+
+```shell
+nix-shell
+```
