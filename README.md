@@ -1,6 +1,8 @@
 # RepositorioTemplate
 
-Repositório que deve ser utilizado como template inicial pelos grupos da matéria de Arquitetura e Desenho de Software.
+Disciplina: FGA0208 - Arquitetura e Desenho de Software
+Número do Grupo: 05
+Entrega: 01
 
 ## Introdução
 
