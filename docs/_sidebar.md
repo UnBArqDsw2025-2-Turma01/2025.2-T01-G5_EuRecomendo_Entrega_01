@@ -17,4 +17,5 @@
     - [1.5. Iniciativas Extras - Base](/Base/1.5.IniciativasExtras.md)
   - **Atas de reunião**
     - [2025-09-01](./Atas/2025-09-01.md)
+    - [2025-09-03](./Atas/2025-09-03.md)
 
