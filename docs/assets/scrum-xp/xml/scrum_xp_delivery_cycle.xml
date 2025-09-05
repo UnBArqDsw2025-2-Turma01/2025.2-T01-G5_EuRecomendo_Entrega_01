@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions 
+  xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  id="Definitions_ScrumXP"
+  targetNamespace="http://bpmn.io/schema/bpmn">
+  
+  <bpmn:collaboration id="Collaboration_ScrumXP">
+    <bpmn:participant id="Participant_ScrumXP" name="Processo Scrum XP Adaptado" processRef="Process_ScrumXP" />
+  </bpmn:collaboration>
+  
+  <bpmn:process id="Process_ScrumXP" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_ScrumXP">
+      <bpmn:lane id="Lane_ProductOwner" name="Product Owner">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DefineProductVision</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CreateProductBacklog</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_RefineBacklog</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_ScrumMaster" name="Scrum Master (Rotativo)">
+        <bpmn:flowNodeRef>Task_FormTeam</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Review</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_DevTeam" name="Time de Desenvolvimento">
+        <bpmn:flowNodeRef>Task_EstablishPractices</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SelectUserStories</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Development</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_ContinueProject</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Stakeholders" name="Stakeholders">
+      </bpmn:lane>
+    </bpmn:laneSet>
+    
+    <bpmn:startEvent id="StartEvent_1" name="Início do Projeto">
+      <bpmn:outgoing>Flow_ToDefineVision</bpmn:outgoing>
+    </bpmn:startEvent>
+    
+    <bpmn:task id="Task_DefineProductVision" name="Definir Visão do Produto">
+      <bpmn:incoming>Flow_ToDefineVision</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToCreateBacklog</bpmn:outgoing>
+    </bpmn:task>
+    
+    <bpmn:task id="Task_CreateProductBacklog" name="Criar Product Backlog Inicial">
+      <bpmn:incoming>Flow_ToCreateBacklog</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToFormTeam</bpmn:outgoing>
+    </bpmn:task>
+    
+    <bpmn:task id="Task_FormTeam" name="Formar Equipe Scrum XP">
+      <bpmn:incoming>Flow_ToFormTeam</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToEstablishPractices</bpmn:outgoing>
+    </bpmn:task>
+    
+    <bpmn:task id="Task_EstablishPractices" name="Estabelecer Padrões e Práticas XP">
+      <bpmn:incoming>Flow_ToEstablishPractices</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToRefineBacklog</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task_RefineBacklog" name="Refinar Product Backlog">
+      <bpmn:incoming>Flow_ToRefineBacklog</bpmn:incoming>
+      <bpmn:incoming>Flow_ToRefineBacklog_Loop</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToSelectUserStories</bpmn:outgoing>
+    </bpmn:task>
+    
+    <bpmn:task id="Task_SelectUserStories" name="Selecionar User Stories">
+      <bpmn:incoming>Flow_ToSelectUserStories</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToDevelopment</bpmn:outgoing>
+    </bpmn:task>
+    
+    <bpmn:task id="Task_Development" name="Ciclo de Desenvolvimento">
+      <bpmn:incoming>Flow_ToDevelopment</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToReview</bpmn:outgoing>
+    </bpmn:task>
+    
+    <bpmn:task id="Task_Review" name="Revisão e Retrospectiva Combinadas">
+      <bpmn:incoming>Flow_ToReview</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToDecision</bpmn:outgoing>
+    </bpmn:task>
+    
+    <bpmn:exclusiveGateway id="Gateway_ContinueProject" name="Continuar Projeto?">
+      <bpmn:incoming>Flow_ToDecision</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToRefineBacklog_Loop</bpmn:outgoing>
+      <bpmn:outgoing>Flow_ToEnd</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <bpmn:endEvent id="EndEvent_1" name="Fim do Projeto">
+      <bpmn:incoming>Flow_ToEnd</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <bpmn:sequenceFlow id="Flow_ToDefineVision" sourceRef="StartEvent_1" targetRef="Task_DefineProductVision" />
+    <bpmn:sequenceFlow id="Flow_ToCreateBacklog" sourceRef="Task_DefineProductVision" targetRef="Task_CreateProductBacklog" />
+    <bpmn:sequenceFlow id="Flow_ToFormTeam" sourceRef="Task_CreateProductBacklog" targetRef="Task_FormTeam" />
+    <bpmn:sequenceFlow id="Flow_ToEstablishPractices" sourceRef="Task_FormTeam" targetRef="Task_EstablishPractices" />
+    <bpmn:sequenceFlow id="Flow_ToRefineBacklog" sourceRef="Task_EstablishPractices" targetRef="Task_RefineBacklog" />
+    <bpmn:sequenceFlow id="Flow_ToSelectUserStories" sourceRef="Task_RefineBacklog" targetRef="Task_SelectUserStories" />
+    <bpmn:sequenceFlow id="Flow_ToDevelopment" sourceRef="Task_SelectUserStories" targetRef="Task_Development" />
+    <bpmn:sequenceFlow id="Flow_ToReview" sourceRef="Task_Development" targetRef="Task_Review" />
+    <bpmn:sequenceFlow id="Flow_ToDecision" sourceRef="Task_Review" targetRef="Gateway_ContinueProject" />
+    <bpmn:sequenceFlow id="Flow_ToRefineBacklog_Loop" name="Sim" sourceRef="Gateway_ContinueProject" targetRef="Task_RefineBacklog" />
+    <bpmn:sequenceFlow id="Flow_ToEnd" name="Não" sourceRef="Gateway_ContinueProject" targetRef="EndEvent_1" />
+  </bpmn:process>
+  
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_ScrumXP">
+      <bpmndi:BPMNShape id="Participant_ScrumXP_di" bpmnElement="Participant_ScrumXP" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1160" height="570" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Lane_ProductOwner_di" bpmnElement="Lane_ProductOwner" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1130" height="125" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Lane_ScrumMaster_di" bpmnElement="Lane_ScrumMaster" isHorizontal="true">
+        <dc:Bounds x="190" y="205" width="1130" height="125" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Lane_DevTeam_di" bpmnElement="Lane_DevTeam" isHorizontal="true">
+        <dc:Bounds x="190" y="330" width="1130" height="200" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Lane_Stakeholders_di" bpmnElement="Lane_Stakeholders" isHorizontal="true">
+        <dc:Bounds x="190" y="530" width="1130" height="120" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_1" bpmnElement="StartEvent_1">
+        <dc:Bounds x="252" y="122" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="236" y="165" width="69" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_DefineProductVision_di" bpmnElement="Task_DefineProductVision">
+        <dc:Bounds x="340" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_CreateProductBacklog_di" bpmnElement="Task_CreateProductBacklog">
+        <dc:Bounds x="500" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_FormTeam_di" bpmnElement="Task_FormTeam">
+        <dc:Bounds x="500" y="230" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_EstablishPractices_di" bpmnElement="Task_EstablishPractices">
+        <dc:Bounds x="500" y="390" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_RefineBacklog_di" bpmnElement="Task_RefineBacklog">
+        <dc:Bounds x="660" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_SelectUserStories_di" bpmnElement="Task_SelectUserStories">
+        <dc:Bounds x="820" y="390" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_Development_di" bpmnElement="Task_Development">
+        <dc:Bounds x="980" y="390" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_Review_di" bpmnElement="Task_Review">
+        <dc:Bounds x="980" y="230" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Gateway_ContinueProject_di" bpmnElement="Gateway_ContinueProject" isMarkerVisible="true">
+        <dc:Bounds x="835" y="245" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="778" y="263" width="47" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="EndEvent_1_di" bpmnElement="EndEvent_1">
+        <dc:Bounds x="842" y="472" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="823" y="515" width="74" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNEdge id="Flow_ToDefineVision_di" bpmnElement="Flow_ToDefineVision">
+        <di:waypoint x="288" y="140" />
+        <di:waypoint x="340" y="140" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_ToCreateBacklog_di" bpmnElement="Flow_ToCreateBacklog">
+        <di:waypoint x="440" y="140" />
+        <di:waypoint x="500" y="140" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_ToFormTeam_di" bpmnElement="Flow_ToFormTeam">
+        <di:waypoint x="550" y="180" />
+        <di:waypoint x="550" y="230" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_ToEstablishPractices_di" bpmnElement="Flow_ToEstablishPractices">
+        <di:waypoint x="550" y="310" />
+        <di:waypoint x="550" y="390" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_ToRefineBacklog_di" bpmnElement="Flow_ToRefineBacklog">
+        <di:waypoint x="600" y="430" />
+        <di:waypoint x="630" y="430" />
+        <di:waypoint x="630" y="140" />
+        <di:waypoint x="660" y="140" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_ToSelectUserStories_di" bpmnElement="Flow_ToSelectUserStories">
+        <di:waypoint x="760" y="140" />
+        <di:waypoint x="790" y="140" />
+        <di:waypoint x="790" y="430" />
+        <di:waypoint x="820" y="430" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_ToDevelopment_di" bpmnElement="Flow_ToDevelopment">
+        <di:waypoint x="920" y="430" />
+        <di:waypoint x="980" y="430" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_ToReview_di" bpmnElement="Flow_ToReview">
+        <di:waypoint x="1030" y="390" />
+        <di:waypoint x="1030" y="310" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_ToDecision_di" bpmnElement="Flow_ToDecision">
+        <di:waypoint x="980" y="270" />
+        <di:waypoint x="885" y="270" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_ToRefineBacklog_Loop_di" bpmnElement="Flow_ToRefineBacklog_Loop">
+        <di:waypoint x="860" y="245" />
+        <di:waypoint x="860" y="140" />
+        <di:waypoint x="760" y="140" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="866" y="190" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_ToEnd_di" bpmnElement="Flow_ToEnd">
+        <di:waypoint x="860" y="295" />
+        <di:waypoint x="860" y="472" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="868" y="376" width="21" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

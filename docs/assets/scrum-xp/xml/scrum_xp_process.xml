@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_ScrumXP"
+                  targetNamespace="http://bpmn.io/schema/bpmn"
+                  exporter="bpmn-js (https://demo.bpmn.io)"
+                  exporterVersion="9.0.3">
+  
+  <!-- Processo principal Scrum XP -->
+  <bpmn:collaboration id="Collaboration_ScrumXP">
+    <bpmn:participant id="Participant_ScrumXP" name="Processo Scrum XP Adaptado" processRef="Process_ScrumXP" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="Process_ScrumXP" isExecutable="false">
+    <!-- Lanes para diferentes papéis -->
+    <bpmn:laneSet id="LaneSet_ScrumXP">
+      <bpmn:lane id="Lane_ProductOwner" name="Product Owner">
+        <bpmn:flowNodeRef>StartEvent_ProjectStart</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DefineProductVision</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CreateProductBacklog</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_RefineBacklog</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_UpdateBacklog</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_ScrumMaster" name="Scrum Master (Rotativo)">
+        <bpmn:flowNodeRef>Task_FormTeam</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_FacilitateRetrospective</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_DevTeam" name="Time de Desenvolvimento">
+        <bpmn:flowNodeRef>Task_EstablishPractices</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SelectUserStories</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CreateSprintBacklog</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DevelopmentCycle</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_TestingQA</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DemoDevelopment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PrepareRelease</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Deploy</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Stakeholders" name="Stakeholders">
+        <bpmn:flowNodeRef>Task_ProvideFeedback</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <!-- Eventos -->
+    <bpmn:startEvent id="StartEvent_ProjectStart" name="Início do Projeto">
+      <bpmn:outgoing>Flow_ToDefineVision</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <!-- Fase de Inicialização -->
+    <bpmn:task id="Task_DefineProductVision" name="Definir Visão do Produto">
+      <bpmn:incoming>Flow_ToDefineVision</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToCreateBacklog</bpmn:outgoing>
+    </bpmn:task>
+    
+    <bpmn:task id="Task_CreateProductBacklog" name="Criar Product Backlog Inicial">
+      <bpmn:incoming>Flow_ToCreateBacklog</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToFormTeam</bpmn:outgoing>
+    </bpmn:task>
+    
+    <bpmn:task id="Task_FormTeam" name="Formar Equipe Scrum XP">
+      <bpmn:incoming>Flow_ToFormTeam</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToEstablishPractices</bpmn:outgoing>
+    </bpmn:task>
+    
+    <bpmn:task id="Task_EstablishPractices" name="Estabelecer Padrões e Práticas XP">
+      <bpmn:incoming>Flow_ToEstablishPractices</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToRefinementLoop</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Ciclo de Entrega -->
+    <bpmn:subProcess id="SubProcess_DeliveryCycle" name="Ciclo de Entrega">
+      <bpmn:incoming>Flow_ToRefinementLoop</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToProjectEnd</bpmn:outgoing>
+
+      <bpmn:startEvent id="StartEvent_DeliveryCycle" name="Iniciar Ciclo de Entrega">
+        <bpmn:outgoing>Flow_ToRefineBacklog</bpmn:outgoing>
+      </bpmn:startEvent>
+
+      <!-- Planejamento -->
+      <bpmn:task id="Task_RefineBacklog" name="Refinar Product Backlog">
+        <bpmn:incoming>Flow_ToRefineBacklog</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToSelectUserStories</bpmn:outgoing>
+      </bpmn:task>
+
+      <bpmn:task id="Task_SelectUserStories" name="Selecionar User Stories">
+        <bpmn:incoming>Flow_ToSelectUserStories</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToCreateSprintBacklog</bpmn:outgoing>
+      </bpmn:task>
+
+      <bpmn:task id="Task_CreateSprintBacklog" name="Criar Sprint Backlog">
+        <bpmn:incoming>Flow_ToCreateSprintBacklog</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToDevelopmentCycle</bpmn:outgoing>
+      </bpmn:task>
+
+      <!-- Desenvolvimento -->
+      <bpmn:subProcess id="Task_DevelopmentCycle" name="Ciclo de Desenvolvimento">
+        <bpmn:incoming>Flow_ToDevelopmentCycle</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToTestingQA</bpmn:outgoing>
+
+        <bpmn:startEvent id="StartEvent_Development" name="Início do Desenvolvimento">
+          <bpmn:outgoing>Flow_ToAsyncCommunication</bpmn:outgoing>
+        </bpmn:startEvent>
+
+        <bpmn:task id="Task_AsyncCommunication" name="Comunicação Assíncrona (3x por semana)">
+          <bpmn:incoming>Flow_ToAsyncCommunication</bpmn:incoming>
+          <bpmn:outgoing>Flow_ToPairProgramming</bpmn:outgoing>
+        </bpmn:task>
+
+        <bpmn:task id="Task_PairProgramming" name="Programação em Pares">
+          <bpmn:incoming>Flow_ToPairProgramming</bpmn:incoming>
+          <bpmn:outgoing>Flow_ToTDD</bpmn:outgoing>
+        </bpmn:task>
+
+        <bpmn:task id="Task_TDD" name="Desenvolvimento Orientado a Testes">
+          <bpmn:incoming>Flow_ToTDD</bpmn:incoming>
+          <bpmn:outgoing>Flow_ToRefactoring</bpmn:outgoing>
+        </bpmn:task>
+
+        <bpmn:task id="Task_Refactoring" name="Refatoração">
+          <bpmn:incoming>Flow_ToRefactoring</bpmn:incoming>
+          <bpmn:outgoing>Flow_ToContinuousIntegration</bpmn:outgoing>
+        </bpmn:task>
+
+        <bpmn:task id="Task_ContinuousIntegration" name="Integração Contínua">
+          <bpmn:incoming>Flow_ToContinuousIntegration</bpmn:incoming>
+          <bpmn:outgoing>Flow_ToEndDevelopment</bpmn:outgoing>
+        </bpmn:task>
+
+        <bpmn:endEvent id="EndEvent_Development" name="Fim do Desenvolvimento">
+          <bpmn:incoming>Flow_ToEndDevelopment</bpmn:incoming>
+        </bpmn:endEvent>
+      </bpmn:subProcess>
+
+      <!-- Testes e QA -->
+      <bpmn:task id="Task_TestingQA" name="Testes e Garantia de Qualidade">
+        <bpmn:incoming>Flow_ToTestingQA</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToDemoDevelopment</bpmn:outgoing>
+      </bpmn:task>
+
+      <!-- Review e Retrospectiva Combinadas -->
+      <bpmn:task id="Task_DemoDevelopment" name="Demonstração do Incremento">
+        <bpmn:incoming>Flow_ToDemoDevelopment</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToProvideFeedback</bpmn:outgoing>
+      </bpmn:task>
+
+      <bpmn:task id="Task_ProvideFeedback" name="Fornecer Feedback">
+        <bpmn:incoming>Flow_ToProvideFeedback</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToFacilitateRetrospective</bpmn:outgoing>
+      </bpmn:task>
+
+      <bpmn:task id="Task_FacilitateRetrospective" name="Conduzir Retrospectiva Combinada">
+        <bpmn:incoming>Flow_ToFacilitateRetrospective</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToUpdateBacklog</bpmn:outgoing>
+      </bpmn:task>
+
+      <bpmn:task id="Task_UpdateBacklog" name="Atualizar Product Backlog">
+        <bpmn:incoming>Flow_ToUpdateBacklog</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToReleaseDecision</bpmn:outgoing>
+      </bpmn:task>
+
+      <!-- Decisão sobre Release -->
+      <bpmn:exclusiveGateway id="Gateway_ReleaseDecision" name="Pronto para Release?">
+        <bpmn:incoming>Flow_ToReleaseDecision</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToRelease</bpmn:outgoing>
+        <bpmn:outgoing>Flow_ToRefineBacklog</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+
+      <!-- Processo de Release -->
+      <bpmn:task id="Task_PrepareRelease" name="Preparação para Release">
+        <bpmn:incoming>Flow_ToRelease</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToDeploy</bpmn:outgoing>
+      </bpmn:task>
+
+      <bpmn:task id="Task_Deploy" name="Implantar">
+        <bpmn:incoming>Flow_ToDeploy</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToEndDeliveryCycle</bpmn:outgoing>
+      </bpmn:task>
+
+      <!-- Decisão sobre Continuação -->
+      <bpmn:exclusiveGateway id="Gateway_ContinueDecision" name="Continuar Projeto?">
+        <bpmn:incoming>Flow_ToEndDeliveryCycle</bpmn:incoming>
+        <bpmn:outgoing>Flow_ToRefineBacklog</bpmn:outgoing>
+        <bpmn:outgoing>Flow_ToEndSubProcess</bpmn:outgoing>
+      </bpmn:exclusiveGateway>
+
+      <bpmn:endEvent id="EndEvent_DeliveryCycle" name="Fim do Ciclo de Entrega">
+        <bpmn:incoming>Flow_ToEndSubProcess</bpmn:incoming>
+      </bpmn:endEvent>
+    </bpmn:subProcess>
+
+    <bpmn:endEvent id="EndEvent_ProjectEnd" name="Fim do Projeto">
+      <bpmn:incoming>Flow_ToProjectEnd</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Fluxos de Sequência (Conexões) -->
+    <bpmn:sequenceFlow id="Flow_ToDefineVision" sourceRef="StartEvent_ProjectStart" targetRef="Task_DefineProductVision" />
+    <bpmn:sequenceFlow id="Flow_ToCreateBacklog" sourceRef="Task_DefineProductVision" targetRef="Task_CreateProductBacklog" />
+    <bpmn:sequenceFlow id="Flow_ToFormTeam" sourceRef="Task_CreateProductBacklog" targetRef="Task_FormTeam" />
+    <bpmn:sequenceFlow id="Flow_ToEstablishPractices" sourceRef="Task_FormTeam" targetRef="Task_EstablishPractices" />
+    <bpmn:sequenceFlow id="Flow_ToRefinementLoop" sourceRef="Task_EstablishPractices" targetRef="SubProcess_DeliveryCycle" />
+    <bpmn:sequenceFlow id="Flow_ToProjectEnd" sourceRef="SubProcess_DeliveryCycle" targetRef="EndEvent_ProjectEnd" />
+
+    <!-- Fluxos dentro do SubProcess -->
+    <bpmn:sequenceFlow id="Flow_ToRefineBacklog" sourceRef="StartEvent_DeliveryCycle" targetRef="Task_RefineBacklog" />
+    <bpmn:sequenceFlow id="Flow_ToSelectUserStories" sourceRef="Task_RefineBacklog" targetRef="Task_SelectUserStories" />
+    <bpmn:sequenceFlow id="Flow_ToCreateSprintBacklog" sourceRef="Task_SelectUserStories" targetRef="Task_CreateSprintBacklog" />
+    <bpmn:sequenceFlow id="Flow_ToDevelopmentCycle" sourceRef="Task_CreateSprintBacklog" targetRef="Task_DevelopmentCycle" />
+    <bpmn:sequenceFlow id="Flow_ToTestingQA" sourceRef="Task_DevelopmentCycle" targetRef="Task_TestingQA" />
+    <bpmn:sequenceFlow id="Flow_ToDemoDevelopment" sourceRef="Task_TestingQA" targetRef="Task_DemoDevelopment" />
+    <bpmn:sequenceFlow id="Flow_ToProvideFeedback" sourceRef="Task_DemoDevelopment" targetRef="Task_ProvideFeedback" />
+    <bpmn:sequenceFlow id="Flow_ToFacilitateRetrospective" sourceRef="Task_ProvideFeedback" targetRef="Task_FacilitateRetrospective" />
+    <bpmn:sequenceFlow id="Flow_ToUpdateBacklog" sourceRef="Task_FacilitateRetrospective" targetRef="Task_UpdateBacklog" />
+    <bpmn:sequenceFlow id="Flow_ToReleaseDecision" sourceRef="Task_UpdateBacklog" targetRef="Gateway_ReleaseDecision" />
+    <bpmn:sequenceFlow id="Flow_ToRelease" name="Sim" sourceRef="Gateway_ReleaseDecision" targetRef="Task_PrepareRelease" />
+    <bpmn:sequenceFlow id="Flow_ToRefineBacklog_Loop" name="Não" sourceRef="Gateway_ReleaseDecision" targetRef="Task_RefineBacklog" />
+    <bpmn:sequenceFlow id="Flow_ToDeploy" sourceRef="Task_PrepareRelease" targetRef="Task_Deploy" />
+    <bpmn:sequenceFlow id="Flow_ToEndDeliveryCycle" sourceRef="Task_Deploy" targetRef="Gateway_ContinueDecision" />
+    <bpmn:sequenceFlow id="Flow_ToRefineBacklog_Continue" name="Sim" sourceRef="Gateway_ContinueDecision" targetRef="Task_RefineBacklog" />
+    <bpmn:sequenceFlow id="Flow_ToEndSubProcess" name="Não" sourceRef="Gateway_ContinueDecision" targetRef="EndEvent_DeliveryCycle" />
+
+    <!-- Fluxos dentro do Ciclo de Desenvolvimento -->
+    <bpmn:sequenceFlow id="Flow_ToAsyncCommunication" sourceRef="StartEvent_Development" targetRef="Task_AsyncCommunication" />
+    <bpmn:sequenceFlow id="Flow_ToPairProgramming" sourceRef="Task_AsyncCommunication" targetRef="Task_PairProgramming" />
+    <bpmn:sequenceFlow id="Flow_ToTDD" sourceRef="Task_PairProgramming" targetRef="Task_TDD" />
+    <bpmn:sequenceFlow id="Flow_ToRefactoring" sourceRef="Task_TDD" targetRef="Task_Refactoring" />
+    <bpmn:sequenceFlow id="Flow_ToContinuousIntegration" sourceRef="Task_Refactoring" targetRef="Task_ContinuousIntegration" />
+    <bpmn:sequenceFlow id="Flow_ToEndDevelopment" sourceRef="Task_ContinuousIntegration" targetRef="EndEvent_Development" />
+
+    <!-- Artefatos -->
+    <bpmn:textAnnotation id="TextAnnotation_AsyncComm">
+      <bpmn:text>Substituição das Daily Scrums por atualizações de texto assíncronas 3x por semana</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_AsyncComm" sourceRef="Task_AsyncCommunication" targetRef="TextAnnotation_AsyncComm" />
+
+    <bpmn:textAnnotation id="TextAnnotation_CombinedMeeting">
+      <bpmn:text>Review e Retrospectiva combinadas em uma única reunião, com opção assíncrona</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_CombinedMeeting" sourceRef="Task_FacilitateRetrospective" targetRef="TextAnnotation_CombinedMeeting" />
+
+    <bpmn:textAnnotation id="TextAnnotation_RotativeSM">
+      <bpmn:text>Scrum Master rotativo a cada ciclo de entrega</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_RotativeSM" sourceRef="Lane_ScrumMaster" targetRef="TextAnnotation_RotativeSM" />
+  </bpmn:process>
+</bpmn:definitions>
